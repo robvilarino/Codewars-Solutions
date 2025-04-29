@@ -33,7 +33,7 @@ def fight(robot_1, robot_2, tactics):
     
     # Announce Fight to Console
     print("* THE FIGHT IS ON! *")
-    print(f"{g[0]['name']}({str(g[0]['health'])}) vs. {g[1]['name']}({str(g[0]['health'])})")
+    print(f"{g[0]['name']}({str(g[0]['health'])}) vs. {g[1]['name']}({str(g[1]['health'])})")
     print("---")
     
     # Iterate for twice as long as the most tactics to let each robot attack 
