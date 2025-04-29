@@ -1,0 +1,98 @@
+'''
+Kata URL: https://www.codewars.com/kata/566b490c8b164e03f8000002
+'''
+def fight(robot_1, robot_2, tactics):
+    
+    # Catch Robots who start with no health
+    # We dont tell console cause the fight wasn't worth watching
+    if robot_1["health"] == 0 and robot_2["health"] != 0:
+        return f"{robot_2['name']} has won the fight."
+    if robot_2["health"] == 0 and robot_1["health"] != 0:
+        return f"{robot_1['name']} has won the fight."
+    if robot_1["health"] == 0 and robot_2["health"] == 0:
+        return "The fight was a draw."
+    
+    # Game objects will be referenced through this list
+    g = []
+    
+    # Fastest robot will go first,
+    # or the first robot will go first if equal speed
+    # Also add the tactics dictionary in the last index
+    if robot_1["speed"] >= robot_2["speed"]:
+        g.append(robot_1)
+        g.append(robot_2)
+    else:
+        g.append(robot_2)
+        g.append(robot_1)
+    g.append(tactics)
+    
+    # Fastest or first robot attacks first
+    # Default flag for no_winner to True
+    attacking_robot = 0
+    there_is_no_winner = True
+    
+    # Announce Fight to Console
+    print("* THE FIGHT IS ON! *")
+    print(f"{g[0]['name']}({str(g[0]['health'])}) vs. {g[1]['name']}({str(g[0]['health'])})")
+    print("---")
+    
+    # Iterate for twice as long as the most tactics to let each robot attack 
+    for _ in range(2*max(len(g[0]["tactics"]),len(g[0]["tactics"]))):
+        
+        # Robots only attack if they have tactics left
+        if g[attacking_robot]["tactics"]:
+            
+            # Other (victim) robot is the one who is attacked
+            other_robot = 1 if attacking_robot == 0 else 0
+            
+            # Grab the current tactic in use 
+            # and how powerful it is
+            tactic_in_use = g[attacking_robot]["tactics"][0]
+            attack_power = g[2][tactic_in_use]
+            
+            # The attack lands!
+            g[other_robot]["health"] -= attack_power
+            
+            # Print current turn to console
+            print(f"{g[attacking_robot]['name']} used {tactic_in_use} for {str(attack_power)} hit points!")
+            print(g[0]['name'] + ": " + str(g[0]['health']))
+            print(g[1]['name'] + ": " + str(g[1]['health']))
+            print("---")
+            
+            # When a robot uses a tactic it is removed from their tactics list
+            g[attacking_robot]["tactics"].pop(0)
+            
+            # Check if the attack destroyed the other robot
+            if g[other_robot]["health"] <= 0:
+                
+                # Flag for a winner and save the champions name for reference
+                there_is_no_winner = False
+                winner = g[attacking_robot]["name"]
+                
+                # Break out of the turns loop
+                break
+            
+            # Other robots turn
+            attacking_robot = other_robot
+    
+    # Check if one robot destroyed the other
+    if there_is_no_winner:
+        
+        # If both robots have the same health it is a draw
+        if g[0]['health'] == g[1]['health']:
+            
+            # Announce the tie to console
+            # and return tie text
+            print("The fight was a draw.")
+            return "The fight was a draw."
+        
+        # The robot with the most health is the winner
+        elif g[0]['health'] > g[1]['health']:
+            winner = g[0]['name']
+        else:
+            winner = g[1]['name']
+    
+    # Announce the winner to console
+    # and return the winner text
+    print(f"{winner} has won the fight.")
+    return f"{winner} has won the fight."
